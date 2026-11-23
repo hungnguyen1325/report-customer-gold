@@ -124,7 +124,14 @@ export async function GET(req: NextRequest) {
     request.input('offset', sql.Int, offset);
     request.input('pageSize', sql.Int, pageSize);
 
-    const cacheKey = `${cleanTableName.toLowerCase()}:${whereSql}:${search || ''}:${startDate || ''}:${endDate || ''}:${kieuCt || ''}:${khoName || ''}:${maQuay || ''}:${status || ''}:${bpkdName || ''}`;
+    const sortExpression = safeSortBy === 'tien' ? 'SUM(CAST(ISNULL(tien, 0) AS float))'
+      : safeSortBy === 'Tong_tlg' ? 'SUM(CAST(ISNULL(Tong_tlg, 0) AS float))'
+      : safeSortBy === 'Tlg_au' ? 'SUM(CAST(ISNULL(Tlg_au, 0) AS float))'
+      : safeSortBy === 'So_ct' ? 'MAX(So_ct)'
+      : safeSortBy === 'datetime0' ? 'MAX(datetime0)'
+      : 'MAX(Ngay_ct)';
+
+    const cacheKey = `${cleanTableName.toLowerCase()}:${whereSql}:${search || ''}:${startDate || ''}:${endDate || ''}:${kieuCt || ''}:${khoName || ''}:${maQuay || ''}:${status || ''}:${bpkdName || ''}:${safeSortBy}:${sortOrder}`;
 
     let summary: any = null;
     const now = Date.now();
@@ -136,15 +143,43 @@ export async function GET(req: NextRequest) {
     let records: any[] = [];
 
     if (summary) {
-      // Summary is cached: Execute ONLY the fast paginated query
+      // Summary is cached: Execute ONLY the fast paginated grouped invoice query
       const pagedRes = await request.query(`
         SET NOCOUNT ON;
         SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
-        SELECT *
+        SELECT 
+          stt_rec,
+          MAX(stt_rec0) AS stt_rec0,
+          MAX(FK_CtID) AS FK_CtID,
+          MAX(So_ct) AS So_ct,
+          MAX(Ngay_ct) AS Ngay_ct,
+          MAX(datetime0) AS datetime0,
+          MAX(KieuCt) AS KieuCt,
+          MAX(KhoName) AS KhoName,
+          MAX(maQuay) AS maQuay,
+          MAX(DoiTacName) AS DoiTacName,
+          MAX(DoiTacTel) AS DoiTacTel,
+          MAX(DoiTacCCCD) AS DoiTacCCCD,
+          MAX(DoiTacAdd) AS DoiTacAdd,
+          MAX(FK_DoitacID) AS FK_DoitacID,
+          MAX(BpkdName) AS BpkdName,
+          MAX(TkName) AS TkName,
+          MAX(status) AS status,
+          MAX(user_id0) AS user_id0,
+          COUNT(*) AS item_count,
+          STRING_AGG(CAST(ISNULL(VtName, '') AS nvarchar(max)), ', ') AS VtName,
+          STRING_AGG(CAST(ISNULL(code, '') AS nvarchar(max)), ', ') AS code,
+          SUM(CAST(ISNULL(tien, 0) AS float)) AS tien,
+          SUM(CAST(ISNULL(Tong_tlg, 0) AS float)) AS Tong_tlg,
+          SUM(CAST(ISNULL(Tlg_au, 0) AS float)) AS Tlg_au,
+          SUM(CAST(ISNULL(Tien_cong, 0) AS float)) AS Tien_cong,
+          SUM(CAST(ISNULL(Tien_da, 0) AS float)) AS Tien_da,
+          SUM(CAST(ISNULL(so_luong, 0) AS float)) AS so_luong
         FROM [${cleanTableName}] WITH (NOLOCK)
         WHERE ${whereSql}
-        ORDER BY ${safeSortBy} ${sortOrder}, stt_rec DESC
+        GROUP BY stt_rec
+        ORDER BY ${sortExpression} ${sortOrder}, stt_rec DESC
         OFFSET @offset ROWS
         FETCH NEXT @pageSize ROWS ONLY;
       `);
@@ -155,9 +190,9 @@ export async function GET(req: NextRequest) {
         SET NOCOUNT ON;
         SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
-        -- 1. Aggregate Summary Metrics
+        -- 1. Aggregate Summary Metrics (Grouped distinct invoices & total sums)
         SELECT 
-          COUNT(*) AS totalCount,
+          COUNT(DISTINCT stt_rec) AS totalCount,
           SUM(CAST(ISNULL(tien, 0) AS float)) AS totalTien,
           SUM(CAST(ISNULL(Tong_tlg, 0) AS float)) AS totalTongTlg,
           SUM(CAST(ISNULL(Tlg_au, 0) AS float)) AS totalTlgAu,
@@ -167,11 +202,39 @@ export async function GET(req: NextRequest) {
         FROM [${cleanTableName}] WITH (NOLOCK)
         WHERE ${whereSql};
 
-        -- 2. Paginated Records
-        SELECT *
+        -- 2. Paginated Grouped Invoices
+        SELECT 
+          stt_rec,
+          MAX(stt_rec0) AS stt_rec0,
+          MAX(FK_CtID) AS FK_CtID,
+          MAX(So_ct) AS So_ct,
+          MAX(Ngay_ct) AS Ngay_ct,
+          MAX(datetime0) AS datetime0,
+          MAX(KieuCt) AS KieuCt,
+          MAX(KhoName) AS KhoName,
+          MAX(maQuay) AS maQuay,
+          MAX(DoiTacName) AS DoiTacName,
+          MAX(DoiTacTel) AS DoiTacTel,
+          MAX(DoiTacCCCD) AS DoiTacCCCD,
+          MAX(DoiTacAdd) AS DoiTacAdd,
+          MAX(FK_DoitacID) AS FK_DoitacID,
+          MAX(BpkdName) AS BpkdName,
+          MAX(TkName) AS TkName,
+          MAX(status) AS status,
+          MAX(user_id0) AS user_id0,
+          COUNT(*) AS item_count,
+          STRING_AGG(CAST(ISNULL(VtName, '') AS nvarchar(max)), ', ') AS VtName,
+          STRING_AGG(CAST(ISNULL(code, '') AS nvarchar(max)), ', ') AS code,
+          SUM(CAST(ISNULL(tien, 0) AS float)) AS tien,
+          SUM(CAST(ISNULL(Tong_tlg, 0) AS float)) AS Tong_tlg,
+          SUM(CAST(ISNULL(Tlg_au, 0) AS float)) AS Tlg_au,
+          SUM(CAST(ISNULL(Tien_cong, 0) AS float)) AS Tien_cong,
+          SUM(CAST(ISNULL(Tien_da, 0) AS float)) AS Tien_da,
+          SUM(CAST(ISNULL(so_luong, 0) AS float)) AS so_luong
         FROM [${cleanTableName}] WITH (NOLOCK)
         WHERE ${whereSql}
-        ORDER BY ${safeSortBy} ${sortOrder}, stt_rec DESC
+        GROUP BY stt_rec
+        ORDER BY ${sortExpression} ${sortOrder}, stt_rec DESC
         OFFSET @offset ROWS
         FETCH NEXT @pageSize ROWS ONLY;
       `);

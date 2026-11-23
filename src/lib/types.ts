@@ -49,6 +49,7 @@ export interface TransactionRecord {
   gia_au?: number;
   tien?: number;
   so_luong?: number;
+  item_count?: number;
   FK_TkID?: string;
   TkName?: string;
   Dien_giai?: string;

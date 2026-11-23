@@ -90,15 +90,35 @@ export async function GET(req: NextRequest) {
       SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
       SELECT TOP 50000
-        stt_rec, stt_rec0, FK_CtID, So_ct, Ngay_ct, datetime0, KieuCt, KhoName, maQuay,
-        DoiTacName, DoiTacTel, DoiTacCCCD, DoiTacAdd,
-        code, VtName, FK_DvtID,
-        Tong_tlg, Tlg_au, Hlg_au, Hlg_auK,
-        so_luong, gia_au, Tien_cong, Tien_da, tien,
-        Dien_giai, BpkdName, TkName, status, user_id0
+        stt_rec,
+        MAX(So_ct) AS So_ct,
+        MAX(Ngay_ct) AS Ngay_ct,
+        MAX(datetime0) AS datetime0,
+        MAX(KieuCt) AS KieuCt,
+        MAX(KhoName) AS KhoName,
+        MAX(maQuay) AS maQuay,
+        MAX(DoiTacName) AS DoiTacName,
+        MAX(DoiTacTel) AS DoiTacTel,
+        MAX(DoiTacCCCD) AS DoiTacCCCD,
+        MAX(DoiTacAdd) AS DoiTacAdd,
+        STRING_AGG(CAST(ISNULL(code, '') AS nvarchar(max)), ', ') AS code,
+        STRING_AGG(CAST(ISNULL(VtName, '') AS nvarchar(max)), ', ') AS VtName,
+        COUNT(*) AS item_count,
+        SUM(CAST(ISNULL(so_luong, 0) AS float)) AS so_luong,
+        SUM(CAST(ISNULL(Tong_tlg, 0) AS float)) AS Tong_tlg,
+        SUM(CAST(ISNULL(Tlg_au, 0) AS float)) AS Tlg_au,
+        SUM(CAST(ISNULL(Tien_cong, 0) AS float)) AS Tien_cong,
+        SUM(CAST(ISNULL(Tien_da, 0) AS float)) AS Tien_da,
+        SUM(CAST(ISNULL(tien, 0) AS float)) AS tien,
+        MAX(Dien_giai) AS Dien_giai,
+        MAX(BpkdName) AS BpkdName,
+        MAX(TkName) AS TkName,
+        MAX(status) AS status,
+        MAX(user_id0) AS user_id0
       FROM [${cleanTableName}] WITH (NOLOCK)
       WHERE ${whereClauses.join(' AND ')}
-      ORDER BY Ngay_ct DESC, datetime0 DESC, stt_rec DESC
+      GROUP BY stt_rec
+      ORDER BY MAX(Ngay_ct) DESC, stt_rec DESC
     `;
 
     const result = await request.query(query);
@@ -107,7 +127,7 @@ export async function GET(req: NextRequest) {
     // Transform data for Excel
     const excelData = rows.map((r: any, idx: number) => ({
       'STT': idx + 1,
-      'Mã giao dịch': (r.stt_rec || '').trim(),
+      'Mã hóa đơn': (r.stt_rec || '').trim(),
       'Số chứng từ': (r.So_ct || '').trim(),
       'Ngày chứng từ': r.Ngay_ct ? new Date(r.Ngay_ct).toLocaleDateString('vi-VN') : '',
       'Thời gian': r.datetime0 ? new Date(r.datetime0).toLocaleString('vi-VN') : '',
@@ -116,14 +136,12 @@ export async function GET(req: NextRequest) {
       'Số điện thoại': r.DoiTacTel || '',
       'CCCD/CMND': r.DoiTacCCCD || '',
       'Địa chỉ': r.DoiTacAdd || '',
+      'Số món hàng': r.item_count || 1,
       'Tên sản phẩm / Vàng': r.VtName || '',
-      'Mã vật tư': r.code || '',
-      'ĐVT': r.FK_DvtID || '',
-      'Số lượng': r.so_luong || 0,
+      'Mã hàng': r.code || '',
+      'Tổng SL': r.so_luong || 0,
       'Tổng TL (chỉ)': r.Tong_tlg || 0,
       'TL Vàng (chỉ)': r.Tlg_au || 0,
-      'Hàm lượng (%)': r.Hlg_au || 0,
-      'Đơn giá vàng': r.gia_au || 0,
       'Tiền công (VNĐ)': r.Tien_cong || 0,
       'Tiền đá (VNĐ)': r.Tien_da || 0,
       'Thành tiền (VNĐ)': r.tien || 0,

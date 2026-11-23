@@ -248,6 +248,7 @@ export default function DashboardPage() {
       {/* Modals */}
       <TransactionDetailModal
         record={viewingRecord}
+        tableName={selectedTable}
         onClose={() => setViewingRecord(null)}
       />
 

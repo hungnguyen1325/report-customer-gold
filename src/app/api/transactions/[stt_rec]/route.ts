@@ -31,13 +31,22 @@ export async function GET(
 
     const result = await pool.request()
       .input('stt_rec', sql.Char(13), decodeURIComponent(stt_rec).padEnd(13, ' '))
-      .query(`SELECT * FROM [${cleanTableName}] WHERE stt_rec = @stt_rec`);
+      .query(`
+        SET NOCOUNT ON;
+        SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+        SELECT * FROM [${cleanTableName}] WITH (NOLOCK)
+        WHERE stt_rec = @stt_rec
+        ORDER BY stt_rec0 ASC
+      `);
 
     if (result.recordset.length === 0) {
       return NextResponse.json({ error: 'Không tìm thấy giao dịch' }, { status: 404 });
     }
 
-    return NextResponse.json({ transaction: result.recordset[0] });
+    return NextResponse.json({
+      transaction: result.recordset[0],
+      items: result.recordset,
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

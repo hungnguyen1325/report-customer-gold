@@ -140,16 +140,18 @@ export default function TransactionTable({
 
                     {/* Tên hàng / Vàng */}
                     <td className="py-3 px-4">
-                      <div className="font-medium text-amber-200/90 truncate max-w-[200px]">
-                        {rec.VtName || '--'}
+                      <div className="flex items-center gap-1.5 font-medium text-amber-200/90 truncate max-w-[220px]" title={rec.VtName}>
+                        <span className="truncate">{rec.VtName || '--'}</span>
+                        {rec.item_count && rec.item_count > 1 ? (
+                          <span className="flex-shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            {rec.item_count} món
+                          </span>
+                        ) : null}
                       </div>
                       <div className="text-[11px] text-neutral-400 flex items-center gap-2">
-                        {rec.code && <span>Mã: {rec.code}</span>}
-                        {rec.Hlg_au !== null && rec.Hlg_au !== undefined && (
-                          <span>HL: {rec.Hlg_au}%</span>
-                        )}
+                        {rec.code && <span className="truncate max-w-[120px]">Mã: {rec.code}</span>}
                         {rec.so_luong !== null && rec.so_luong !== undefined && (
-                          <span>SL: {rec.so_luong}</span>
+                          <span>Tổng SL: {rec.so_luong}</span>
                         )}
                       </div>
                     </td>
@@ -216,7 +218,7 @@ export default function TransactionTable({
         <div className="flex items-center gap-3">
           <span>
             Hiển thị <strong className="text-white">{records.length}</strong> / tổng{' '}
-            <strong className="text-amber-400">{totalRecords.toLocaleString('vi-VN')}</strong> bản ghi
+            <strong className="text-amber-400">{totalRecords.toLocaleString('vi-VN')}</strong> hóa đơn
           </span>
 
           <div className="flex items-center gap-1.5">
