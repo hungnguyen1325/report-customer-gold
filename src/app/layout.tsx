@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: 'Hệ Thống Quản Trị & Báo Cáo Giao Dịch Vàng',
     template: '%s | Quản Trị Giao Dịch Vàng',
   },
-  description: 'Hệ thống chuyên sâu phục vụ quản trị, kiểm soát và tổng hợp báo cáo dữ liệu giao dịch tiệm vàng, đá quý trên Microsoft SQL Server.',
+  description: 'Hệ thống chuyên sâu phục vụ quản trị, kiểm soát và tổng hợp báo cáo dữ liệu giao dịch tiệm vàng, đá quý chuyên nghiệp.',
   applicationName: 'Hệ Thống Quản Trị Giao Dịch Vàng',
   keywords: [
     'quản trị tiệm vàng',
@@ -27,7 +27,6 @@ export const metadata: Metadata = {
     'vàng bạc đá quý',
     'thống kê kpi tiệm vàng',
     'xuất báo cáo excel',
-    'sql server',
     'báo cáo tài chính vàng',
   ],
   authors: [{ name: 'Quản trị viên Hệ thống' }],
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Hệ Thống Quản Trị & Báo Cáo Giao Dịch Vàng',
-    description: 'Hệ thống chuyên sâu phục vụ quản trị, kiểm soát và tổng hợp báo cáo dữ liệu giao dịch tiệm vàng trên Microsoft SQL Server.',
+    description: 'Hệ thống chuyên sâu phục vụ quản trị, kiểm soát và tổng hợp báo cáo dữ liệu giao dịch tiệm vàng, đá quý chuyên nghiệp.',
     url: '/',
     siteName: 'Hệ Thống Quản Trị Giao Dịch Vàng',
     locale: 'vi_VN',

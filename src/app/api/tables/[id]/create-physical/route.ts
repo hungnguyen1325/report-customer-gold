@@ -30,8 +30,8 @@ export async function POST(
       success: true,
       created: result.created,
       message: result.created
-        ? `Đã tạo thành công bảng vật lý [${tableName}] trong SQL Server!`
-        : `Bảng vật lý [${tableName}] đã tồn tại trong SQL Server.`,
+        ? `Đã tạo thành công bảng dữ liệu [${tableName}]!`
+        : `Bảng dữ liệu [${tableName}] đã sẵn sàng.`,
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
       `);
 
     const message = physicalCreated
-      ? `Đã đăng ký và tự động tạo bảng vật lý [${cleanName}] trong SQL Server thành công!`
+      ? `Đã đăng ký và tự động tạo bảng [${cleanName}] thành công!`
       : `Đã đăng ký bảng [${cleanName}] thành công!`;
 
     return NextResponse.json({ success: true, table: newTable, message, physicalCreated }, { status: 201 });
