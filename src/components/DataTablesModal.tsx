@@ -132,7 +132,7 @@ export default function DataTablesModal({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <span className="text-xs text-neutral-400 block">
-                Hệ thống hỗ trợ <strong>Tự động tạo bảng vật lý mới</strong> trong SQL Server với chuẩn 37 cột giao dịch vàng khi chưa có.
+                Hệ thống hỗ trợ <strong>Tự động tạo bảng vật lý mới</strong> với chuẩn 37 cột giao dịch vàng khi chưa có.
               </span>
             </div>
             <button
@@ -155,7 +155,7 @@ export default function DataTablesModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-neutral-400 font-semibold mb-1">
-                    Tên bảng kỹ thuật trong SQL Server
+                    Tên bảng kỹ thuật trong CSDL
                   </label>
                   <input
                     type="text"
@@ -206,7 +206,7 @@ export default function DataTablesModal({
                     />
                     <div>
                       <div className="font-bold text-amber-300 text-xs">
-                        ⚡ Tự động tạo bảng vật lý trong SQL Server (Nếu chưa tồn tại)
+                        ⚡ Tự động tạo bảng vật lý trong CSDL (Nếu chưa tồn tại)
                       </div>
                       <div className="text-[11px] text-neutral-400 mt-0.5">
                         Hệ thống sẽ tự động thực thi lệnh DDL để tạo bảng với đầy đủ 37 cột chuẩn: mã chứng từ, thông tin khách hàng (CCCD, SĐT), khối lượng vàng, hàm lượng, tiền công, tiền đá, thành tiền và tài khoản kế toán.
@@ -241,7 +241,7 @@ export default function DataTablesModal({
               <thead>
                 <tr className="bg-neutral-950 text-neutral-300 border-b border-neutral-800 text-[11px] uppercase tracking-wider">
                   <th className="py-2.5 px-4">Tên hiển thị</th>
-                  <th className="py-2.5 px-4">Tên bảng SQL</th>
+                  <th className="py-2.5 px-4">Tên bảng kỹ thuật</th>
                   <th className="py-2.5 px-4">Trạng thái trong DB</th>
                   <th className="py-2.5 px-4">Số lượng bản ghi</th>
                   <th className="py-2.5 px-4">Mô tả</th>
@@ -261,7 +261,7 @@ export default function DataTablesModal({
                       {t.physical_exists ? (
                         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                           <CheckCircle className="w-3 h-3" />
-                          <span>Đã có trong SQL Server</span>
+                          <span>Đã sẵn sàng trong CSDL</span>
                         </span>
                       ) : (
                         <div className="flex items-center gap-2">
