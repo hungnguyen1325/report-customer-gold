@@ -1,16 +1,86 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 
+export const viewport: Viewport = {
+  themeColor: '#0a0a0a',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
-  title: 'Hệ Thống Quản Trị Giao Dịch Vàng | Báo Cáo & Kiểm Soát',
-  description: 'Hệ thống quản trị và kiểm soát báo cáo giao dịch vàng chuyên nghiệp',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+  ),
+  title: {
+    default: 'Hệ Thống Quản Trị & Báo Cáo Giao Dịch Vàng',
+    template: '%s | Quản Trị Giao Dịch Vàng',
+  },
+  description: 'Hệ thống chuyên sâu phục vụ quản trị, kiểm soát và tổng hợp báo cáo dữ liệu giao dịch tiệm vàng, đá quý trên Microsoft SQL Server.',
+  applicationName: 'Hệ Thống Quản Trị Giao Dịch Vàng',
+  keywords: [
+    'quản trị tiệm vàng',
+    'báo cáo giao dịch vàng',
+    'tiệm vàng',
+    'vàng bạc đá quý',
+    'thống kê kpi tiệm vàng',
+    'xuất báo cáo excel',
+    'sql server',
+    'báo cáo tài chính vàng',
+  ],
+  authors: [{ name: 'Quản trị viên Hệ thống' }],
+  creator: 'Vàng Bạc Đá Quý',
+  publisher: 'Hệ Thống Báo Cáo Vàng',
+  formatDetection: {
+    telephone: false,
+    date: false,
+    address: false,
+    email: false,
+    url: false,
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32' },
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
-    apple: '/apple-touch-icon.png',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: ['/favicon.ico'],
+  },
+  openGraph: {
+    title: 'Hệ Thống Quản Trị & Báo Cáo Giao Dịch Vàng',
+    description: 'Hệ thống chuyên sâu phục vụ quản trị, kiểm soát và tổng hợp báo cáo dữ liệu giao dịch tiệm vàng trên Microsoft SQL Server.',
+    url: '/',
+    siteName: 'Hệ Thống Quản Trị Giao Dịch Vàng',
+    locale: 'vi_VN',
+    type: 'website',
+    images: [
+      {
+        url: '/icon.svg',
+        width: 512,
+        height: 512,
+        alt: 'Logo Vàng 999.9',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Hệ Thống Quản Trị & Báo Cáo Giao Dịch Vàng',
+    description: 'Hệ thống quản trị và kiểm soát báo cáo giao dịch vàng chuyên nghiệp',
+    images: ['/icon.svg'],
+  },
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
   },
 };
 
