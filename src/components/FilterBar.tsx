@@ -46,24 +46,35 @@ export default function FilterBar({
   onExportExcel,
   loadingExport,
 }: FilterBarProps) {
+  // Helper to format local date without UTC shifts
+  const formatLocalDate = (d: Date) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const now = new Date();
+  const todayStr = formatLocalDate(now);
+  const prior7Str = formatLocalDate(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7));
+  const month1Str = formatLocalDate(new Date(now.getFullYear(), now.getMonth(), 1));
+
+  const isToday = startDate === todayStr && endDate === todayStr;
+  const is7Days = startDate === prior7Str && endDate === todayStr;
+  const isMonth = startDate === month1Str && endDate === todayStr;
+  const isAll = !startDate && !endDate;
+
   // Quick date presets
   const setQuickDate = (type: 'today' | '7days' | 'month' | 'all') => {
-    const now = new Date();
-    const formatDate = (d: Date) => d.toISOString().split('T')[0];
-
     if (type === 'today') {
-      const todayStr = formatDate(now);
       setStartDate(todayStr);
       setEndDate(todayStr);
     } else if (type === '7days') {
-      const prior = new Date();
-      prior.setDate(now.getDate() - 7);
-      setStartDate(formatDate(prior));
-      setEndDate(formatDate(now));
+      setStartDate(prior7Str);
+      setEndDate(todayStr);
     } else if (type === 'month') {
-      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-      setStartDate(formatDate(firstDay));
-      setEndDate(formatDate(now));
+      setStartDate(month1Str);
+      setEndDate(todayStr);
     } else {
       setStartDate('');
       setEndDate('');
@@ -92,30 +103,46 @@ export default function FilterBar({
           <button
             type="button"
             onClick={() => setQuickDate('today')}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition-all cursor-pointer whitespace-nowrap"
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap border ${
+              isToday
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-neutral-950 border-amber-400 shadow-md font-bold'
+                : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border-neutral-700'
+            }`}
           >
             Hôm nay
           </button>
           <button
             type="button"
             onClick={() => setQuickDate('7days')}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition-all cursor-pointer whitespace-nowrap"
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap border ${
+              is7Days
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-neutral-950 border-amber-400 shadow-md font-bold'
+                : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border-neutral-700'
+            }`}
           >
             7 ngày qua
           </button>
           <button
             type="button"
             onClick={() => setQuickDate('month')}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition-all cursor-pointer whitespace-nowrap"
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap border ${
+              isMonth
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-neutral-950 border-amber-400 shadow-md font-bold'
+                : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border-neutral-700'
+            }`}
           >
             Tháng này
           </button>
           <button
             type="button"
             onClick={() => setQuickDate('all')}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-amber-400 hover:text-amber-300 border border-neutral-700 transition-all cursor-pointer whitespace-nowrap"
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap border ${
+              isAll
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-neutral-950 border-amber-400 shadow-md font-bold'
+                : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border-neutral-700'
+            }`}
           >
-            Tất cả
+            Toàn bộ
           </button>
         </div>
 

@@ -36,10 +36,19 @@ export default function DashboardPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
 
-  // Filters
+  // Helper for today's date in local YYYY-MM-DD format
+  const getTodayDateString = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Filters: Mặc định khi mới vô chỉ lọc giao dịch ngày hôm nay
   const [search, setSearch] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(getTodayDateString);
+  const [endDate, setEndDate] = useState(getTodayDateString);
   const [kieuCt, setKieuCt] = useState('');
   const [khoName, setKhoName] = useState('');
   const [maQuay, setMaQuay] = useState('');
@@ -136,9 +145,10 @@ export default function DashboardPage() {
   };
 
   const handleResetFilters = () => {
+    const today = getTodayDateString();
     setSearch('');
-    setStartDate('');
-    setEndDate('');
+    setStartDate(today);
+    setEndDate(today);
     setKieuCt('');
     setKhoName('');
     setMaQuay('');
