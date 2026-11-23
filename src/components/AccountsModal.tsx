@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Account, DataTableInfo } from '@/lib/types';
-import { X, UserPlus, Shield, Trash2, Edit2, AlertCircle, Plus, Table2 } from 'lucide-react';
+import { X, UserPlus, Shield, Trash2, Edit2, AlertCircle, Plus, Table2, Eye, EyeOff } from 'lucide-react';
 
 interface AccountsModalProps {
   isOpen: boolean;
@@ -20,6 +20,7 @@ export default function AccountsModal({ isOpen, onClose, tables }: AccountsModal
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState<'admin' | 'user'>('user');
   const [active, setActive] = useState(true);
@@ -364,13 +365,23 @@ export default function AccountsModal({ isOpen, onClose, tables }: AccountsModal
                   <label className="block text-neutral-400 font-semibold mb-1">
                     {editingAccount ? 'Đổi mật khẩu mới (bỏ trống nếu không đổi)' : 'Mật khẩu'}
                   </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 bg-neutral-800 rounded-lg border border-neutral-700 text-neutral-200 focus:outline-none focus:border-amber-400"
-                    required={!editingAccount}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full pl-3 pr-10 py-2 bg-neutral-800 rounded-lg border border-neutral-700 text-neutral-200 focus:outline-none focus:border-amber-400"
+                      required={!editingAccount}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                      title={showPassword ? 'Ẩn mật khẩu' : 'Xem mật khẩu'}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
 
                 <div>
