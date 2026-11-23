@@ -8,7 +8,6 @@ import StatsCards from '@/components/StatsCards';
 import FilterBar from '@/components/FilterBar';
 import TransactionTable from '@/components/TransactionTable';
 import TransactionDetailModal from '@/components/TransactionDetailModal';
-import TransactionFormModal from '@/components/TransactionFormModal';
 import AccountsModal from '@/components/AccountsModal';
 import DataTablesModal from '@/components/DataTablesModal';
 import ChangePasswordModal from '@/components/ChangePasswordModal';
@@ -60,8 +59,6 @@ export default function DashboardPage() {
 
   // Modals state
   const [viewingRecord, setViewingRecord] = useState<TransactionRecord | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<TransactionRecord | null>(null);
   const [isAccountsOpen, setIsAccountsOpen] = useState(false);
   const [isTablesOpen, setIsTablesOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
@@ -186,26 +183,6 @@ export default function DashboardPage() {
     }
   };
 
-  const handleDelete = async (rec: TransactionRecord) => {
-    if (!confirm(`Bạn có chắc chắn muốn xóa giao dịch ${rec.So_ct?.trim() || rec.stt_rec?.trim()}?`)) return;
-
-    try {
-      const params = new URLSearchParams({
-        table: selectedTable,
-        stt_rec0: rec.stt_rec0 || '',
-        FK_CtID: rec.FK_CtID || '',
-      });
-      const res = await fetch(`/api/transactions/${encodeURIComponent(rec.stt_rec)}?${params.toString()}`, {
-        method: 'DELETE',
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      fetchTransactions();
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
   if (authLoading || !user) {
     return (
       <div className="min-h-screen bg-neutral-950 flex items-center justify-center text-amber-400 font-semibold text-sm">
@@ -265,11 +242,6 @@ export default function DashboardPage() {
             setPage(1);
           }}
           onViewDetail={(rec) => setViewingRecord(rec)}
-          onEdit={(rec) => {
-            setEditingRecord(rec);
-            setIsFormOpen(true);
-          }}
-          onDelete={handleDelete}
         />
       </main>
 
@@ -277,14 +249,6 @@ export default function DashboardPage() {
       <TransactionDetailModal
         record={viewingRecord}
         onClose={() => setViewingRecord(null)}
-      />
-
-      <TransactionFormModal
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        onSuccess={() => fetchTransactions()}
-        record={editingRecord}
-        tableName={selectedTable}
       />
 
       <AccountsModal

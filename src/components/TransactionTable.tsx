@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TransactionRecord } from '@/lib/types';
-import { Eye, Edit3, Trash2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, FileText } from 'lucide-react';
+import { Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, FileText } from 'lucide-react';
 
 interface TransactionTableProps {
   records: TransactionRecord[];
@@ -14,8 +14,6 @@ interface TransactionTableProps {
   onPageChange: (newPage: number) => void;
   onPageSizeChange: (newSize: number) => void;
   onViewDetail: (rec: TransactionRecord) => void;
-  onEdit: (rec: TransactionRecord) => void;
-  onDelete: (rec: TransactionRecord) => void;
 }
 
 export default function TransactionTable({
@@ -28,8 +26,6 @@ export default function TransactionTable({
   onPageChange,
   onPageSizeChange,
   onViewDetail,
-  onEdit,
-  onDelete,
 }: TransactionTableProps) {
   const formatMoney = (val: number | undefined) => {
     if (val === undefined || val === null || isNaN(val)) return '0 ₫';
@@ -198,29 +194,14 @@ export default function TransactionTable({
 
                     {/* Thao tác */}
                     <td className="py-3 px-4 whitespace-nowrap text-center">
-                      <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          onClick={() => onViewDetail(rec)}
-                          className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
-                          title="Xem chi tiết phiếu"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => onEdit(rec)}
-                          className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
-                          title="Chỉnh sửa giao dịch"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => onDelete(rec)}
-                          className="p-1.5 rounded-lg bg-neutral-800 hover:bg-red-950/60 text-red-400 hover:text-red-300 transition-colors cursor-pointer"
-                          title="Xóa giao dịch"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => onViewDetail(rec)}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-amber-400 hover:text-amber-300 text-xs font-medium border border-neutral-700/80 transition-colors cursor-pointer"
+                        title="Xem chi tiết phiếu"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Xem</span>
+                      </button>
                     </td>
                   </tr>
                 );
