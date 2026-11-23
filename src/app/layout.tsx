@@ -5,6 +5,13 @@ import { AuthProvider } from '@/context/AuthContext';
 export const metadata: Metadata = {
   title: 'Hệ Thống Quản Trị Giao Dịch Vàng | Báo Cáo & Kiểm Soát',
   description: 'Hệ thống quản trị và kiểm soát báo cáo giao dịch vàng chuyên nghiệp',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({

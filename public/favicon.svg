@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#261A05"/>
+      <stop offset="50%" stop-color="#120E06"/>
+      <stop offset="100%" stop-color="#050402"/>
+    </linearGradient>
+    <linearGradient id="goldTop" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="20%" stop-color="#FEF08A"/>
+      <stop offset="50%" stop-color="#FBBF24"/>
+      <stop offset="85%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="goldFront" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="50%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#92400E"/>
+    </linearGradient>
+    <linearGradient id="goldRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B45309"/>
+      <stop offset="100%" stop-color="#78350F"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Squircle with Luxury Gold Border -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)" stroke="#F59E0B" stroke-width="2.5"/>
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="none" stroke="#FDE68A" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- Radial Glow Behind Gold Bar -->
+  <ellipse cx="32" cy="46" rx="24" ry="8" fill="url(#glow)"/>
+
+  <!-- 3D Gold Bar Front Face -->
+  <polygon points="12,39 48,39 43,51 7,51" fill="url(#goldFront)" stroke="#78350F" stroke-width="0.5"/>
+
+  <!-- 3D Gold Bar Right Face -->
+  <polygon points="48,39 57,27 52,38 43,51" fill="url(#goldRight)" stroke="#551F03" stroke-width="0.5"/>
+
+  <!-- 3D Gold Bar Top Face -->
+  <polygon points="18,20 52,20 57,27 48,39 12,39 14,27" fill="url(#goldTop)" stroke="#FEF08A" stroke-width="0.8"/>
+
+  <!-- Inner Plate with 999.9 Hallmark -->
+  <polygon points="20,23 48,23 52,27 45,36 17,36 18,27" fill="#FEF08A" fill-opacity="0.25" stroke="#FFFFFF" stroke-width="0.4"/>
+  <text x="32" y="32" text-anchor="middle" fill="#78350F" font-size="7.5" font-weight="900" font-family="Arial, sans-serif" letter-spacing="0.5">999.9</text>
+
+  <!-- Sparkle Star Highlight -->
+  <polygon points="16,14 17.5,19 22,20.5 17.5,22 16,27 14.5,22 10,20.5 14.5,19" fill="#FFFFFF"/>
+  <polygon points="53,16 54,19 57,20 54,21 53,24 52,21 49,20 52,19" fill="#FEF08A"/>
+</svg>
