@@ -1,0 +1,246 @@
+'use client';
+
+import React from 'react';
+import { Search, Calendar, Filter, RotateCcw, FileSpreadsheet } from 'lucide-react';
+
+interface FilterBarProps {
+  search: string;
+  setSearch: (v: string) => void;
+  startDate: string;
+  setStartDate: (v: string) => void;
+  endDate: string;
+  setEndDate: (v: string) => void;
+  kieuCt: string;
+  setKieuCt: (v: string) => void;
+  khoName: string;
+  setKhoName: (v: string) => void;
+  maQuay: string;
+  setMaQuay: (v: string) => void;
+  kieuCtOptions: string[];
+  khoOptions: string[];
+  quayOptions: string[];
+  onApplyFilters: () => void;
+  onResetFilters: () => void;
+  onExportExcel: () => void;
+  loadingExport?: boolean;
+}
+
+export default function FilterBar({
+  search,
+  setSearch,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  kieuCt,
+  setKieuCt,
+  khoName,
+  setKhoName,
+  maQuay,
+  setMaQuay,
+  kieuCtOptions,
+  khoOptions,
+  quayOptions,
+  onApplyFilters,
+  onResetFilters,
+  onExportExcel,
+  loadingExport,
+}: FilterBarProps) {
+  // Quick date presets
+  const setQuickDate = (type: 'today' | '7days' | 'month' | 'all') => {
+    const now = new Date();
+    const formatDate = (d: Date) => d.toISOString().split('T')[0];
+
+    if (type === 'today') {
+      const todayStr = formatDate(now);
+      setStartDate(todayStr);
+      setEndDate(todayStr);
+    } else if (type === '7days') {
+      const prior = new Date();
+      prior.setDate(now.getDate() - 7);
+      setStartDate(formatDate(prior));
+      setEndDate(formatDate(now));
+    } else if (type === 'month') {
+      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+      setStartDate(formatDate(firstDay));
+      setEndDate(formatDate(now));
+    } else {
+      setStartDate('');
+      setEndDate('');
+    }
+  };
+
+  return (
+    <div className="bg-neutral-900/90 rounded-2xl p-5 border border-amber-500/20 shadow-xl mb-6 backdrop-blur-md">
+      {/* Top row: Search, Quick Dates, Action buttons */}
+      <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between mb-4">
+        {/* Search input */}
+        <div className="relative flex-1">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400" />
+          <input
+            type="text"
+            placeholder="Tìm theo số chứng từ, tên khách hàng, SĐT, CCCD, tên vàng, mã vật tư..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && onApplyFilters()}
+            className="w-full pl-10 pr-4 py-2.5 bg-neutral-800 text-neutral-100 placeholder-neutral-400 text-sm rounded-xl border border-neutral-700 focus:outline-none focus:border-amber-400 transition-all"
+          />
+        </div>
+
+        {/* Quick Date Presets */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0">
+          <button
+            type="button"
+            onClick={() => setQuickDate('today')}
+            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition-all cursor-pointer whitespace-nowrap"
+          >
+            Hôm nay
+          </button>
+          <button
+            type="button"
+            onClick={() => setQuickDate('7days')}
+            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition-all cursor-pointer whitespace-nowrap"
+          >
+            7 ngày qua
+          </button>
+          <button
+            type="button"
+            onClick={() => setQuickDate('month')}
+            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition-all cursor-pointer whitespace-nowrap"
+          >
+            Tháng này
+          </button>
+          <button
+            type="button"
+            onClick={() => setQuickDate('all')}
+            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-amber-400 hover:text-amber-300 border border-neutral-700 transition-all cursor-pointer whitespace-nowrap"
+          >
+            Tất cả
+          </button>
+        </div>
+
+        {/* Action Button: Export Excel */}
+        <div className="flex items-center">
+          <button
+            onClick={onExportExcel}
+            disabled={loadingExport}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600/90 hover:bg-emerald-500 text-white font-semibold text-xs sm:text-sm shadow-md hover:shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span>{loadingExport ? 'Đang xuất...' : 'Xuất Excel'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Second row: Detailed Dropdown Filters */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 pt-3 border-t border-neutral-800">
+        {/* Từ ngày */}
+        <div>
+          <label className="block text-[11px] font-semibold text-neutral-400 mb-1">
+            Từ ngày
+          </label>
+          <div className="relative">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full px-3 py-2 bg-neutral-800 text-neutral-200 text-xs rounded-lg border border-neutral-700 focus:outline-none focus:border-amber-400"
+            />
+          </div>
+        </div>
+
+        {/* Đến ngày */}
+        <div>
+          <label className="block text-[11px] font-semibold text-neutral-400 mb-1">
+            Đến ngày
+          </label>
+          <div className="relative">
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full px-3 py-2 bg-neutral-800 text-neutral-200 text-xs rounded-lg border border-neutral-700 focus:outline-none focus:border-amber-400"
+            />
+          </div>
+        </div>
+
+        {/* Kiểu chứng từ */}
+        <div>
+          <label className="block text-[11px] font-semibold text-neutral-400 mb-1">
+            Kiểu chứng từ
+          </label>
+          <select
+            value={kieuCt}
+            onChange={(e) => setKieuCt(e.target.value)}
+            className="w-full px-3 py-2 bg-neutral-800 text-neutral-200 text-xs rounded-lg border border-neutral-700 focus:outline-none focus:border-amber-400 cursor-pointer"
+          >
+            <option value="">-- Tất cả kiểu --</option>
+            {kieuCtOptions.map((k) => (
+              <option key={k} value={k}>
+                {k}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Kho hàng */}
+        <div>
+          <label className="block text-[11px] font-semibold text-neutral-400 mb-1">
+            Kho hàng / Chi nhánh
+          </label>
+          <select
+            value={khoName}
+            onChange={(e) => setKhoName(e.target.value)}
+            className="w-full px-3 py-2 bg-neutral-800 text-neutral-200 text-xs rounded-lg border border-neutral-700 focus:outline-none focus:border-amber-400 cursor-pointer"
+          >
+            <option value="">-- Tất cả kho --</option>
+            {khoOptions.map((kho) => (
+              <option key={kho} value={kho}>
+                {kho}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Mã quầy */}
+        <div>
+          <label className="block text-[11px] font-semibold text-neutral-400 mb-1">
+            Quầy giao dịch
+          </label>
+          <select
+            value={maQuay}
+            onChange={(e) => setMaQuay(e.target.value)}
+            className="w-full px-3 py-2 bg-neutral-800 text-neutral-200 text-xs rounded-lg border border-neutral-700 focus:outline-none focus:border-amber-400 cursor-pointer"
+          >
+            <option value="">-- Tất cả quầy --</option>
+            {quayOptions.map((q) => (
+              <option key={q} value={q}>
+                {q}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Apply & Reset Buttons */}
+        <div className="flex items-end gap-2">
+          <button
+            type="button"
+            onClick={onApplyFilters}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs transition-all cursor-pointer shadow-sm"
+          >
+            <Filter className="w-3.5 h-3.5" />
+            <span>Lọc</span>
+          </button>
+          <button
+            type="button"
+            onClick={onResetFilters}
+            className="py-2 px-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 text-xs transition-all cursor-pointer"
+            title="Đặt lại bộ lọc"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
