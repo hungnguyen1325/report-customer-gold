@@ -62,10 +62,9 @@ export default function FilterBar({
   const isToday = startDate === todayStr && endDate === todayStr;
   const is7Days = startDate === prior7Str && endDate === todayStr;
   const isMonth = startDate === month1Str && endDate === todayStr;
-  const isAll = !startDate && !endDate;
 
   // Quick date presets
-  const setQuickDate = (type: 'today' | '7days' | 'month' | 'all') => {
+  const setQuickDate = (type: 'today' | '7days' | 'month') => {
     if (type === 'today') {
       setStartDate(todayStr);
       setEndDate(todayStr);
@@ -75,9 +74,6 @@ export default function FilterBar({
     } else if (type === 'month') {
       setStartDate(month1Str);
       setEndDate(todayStr);
-    } else {
-      setStartDate('');
-      setEndDate('');
     }
   };
 
@@ -132,17 +128,6 @@ export default function FilterBar({
             }`}
           >
             Tháng này
-          </button>
-          <button
-            type="button"
-            onClick={() => setQuickDate('all')}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap border ${
-              isAll
-                ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-neutral-950 border-amber-400 shadow-md font-bold'
-                : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border-neutral-700'
-            }`}
-          >
-            Toàn bộ
           </button>
         </div>
 

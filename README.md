@@ -9,7 +9,7 @@
 ### 1. Báo cáo & Thống kê Tài chính (KPIs Dashboard)
 * **Tổng hợp chỉ số tức thì**: Tự động tính toán Doanh thu, Tổng trọng lượng giao dịch (chỉ), Trọng lượng vàng nguyên chất (Au), Tiền công, Tiền đá, Tổng số lượng giao dịch.
 * **Bộ lọc đa chiều linh hoạt**:
-  * Lọc theo khoảng ngày (Hôm nay, 7 ngày qua, Tháng này, Toàn bộ hoặc chọn ngày tùy ý).
+  * Lọc theo khoảng ngày (Hôm nay, 7 ngày qua, Tháng này hoặc chọn ngày tùy ý).
   * Lọc theo Loại chứng từ (`KieuCt`), Kho hàng (`KhoName`), Quầy giao dịch (`maQuay`), Trạng thái (`status`).
   * Tìm kiếm tức thời theo: Số chứng từ (`So_ct`), Tên khách hàng (`DoiTacName`), Số điện thoại (`DoiTacTel`), CCCD/CMND (`DoiTacCCCD`), Tên hàng hóa (`VtName`), Mã vạch (`code`).
 * **Xuất báo cáo Excel chuyên nghiệp**: Xuất toàn bộ hoặc kết quả lọc ra file `.xlsx` với tiêu đề tiếng Việt chuẩn, tự động căn chỉnh độ rộng cột và định dạng số tiền VND.
