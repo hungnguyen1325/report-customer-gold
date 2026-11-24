@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSession, checkTablePermission } from '@/lib/auth';
 import { getDbPool, sql, ensureTransactionTableExists } from '@/lib/db';
 import { invalidateSummaryCache } from '@/app/api/transactions/route';
+import { invalidateFilterCache } from '@/app/api/transactions/filters/route';
 import { logger, getSafeErrorMessage } from '@/lib/logger';
 import * as XLSX from 'xlsx';
 
@@ -220,7 +221,7 @@ export async function POST(req: NextRequest) {
         '111',
         'Tiền mặt',
         isMua ? 'Khách bán vàng' : 'Khách mua vàng',
-        quay || 'Vàng Nam Phong',
+        '', // BpkdName (do not set counter as employee)
         null,
         null,
         null,
@@ -251,8 +252,9 @@ export async function POST(req: NextRequest) {
       insertedCount += chunk.length;
     }
 
-    // Invalidate cached statistics
+    // Invalidate cached statistics and filters
     invalidateSummaryCache(cleanTableName);
+    invalidateFilterCache(cleanTableName);
 
     logger.log(`[Import Excel] Người dùng ${session.username} nhập thành công ${insertedCount} dòng vào [${cleanTableName}]`);
 

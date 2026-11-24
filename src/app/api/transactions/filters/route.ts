@@ -6,6 +6,14 @@ import { getDbPool, ensureTransactionTableExists } from '@/lib/db';
 const filterOptionsCache = new Map<string, { data: any; timestamp: number }>();
 const FILTER_CACHE_TTL = 120000; // 2 minutes
 
+export function invalidateFilterCache(tableName?: string) {
+  if (!tableName) {
+    filterOptionsCache.clear();
+  } else {
+    filterOptionsCache.delete(tableName.toLowerCase());
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     const session = await getSession(req);
@@ -62,28 +70,26 @@ export async function GET(req: NextRequest) {
       FROM [${cleanTableName}] WITH (NOLOCK)
       WHERE BpkdName IS NOT NULL AND LTRIM(RTRIM(BpkdName)) <> '' 
       ORDER BY BpkdName ASC;
-
-      SELECT DISTINCT user_id0 
-      FROM [${cleanTableName}] WITH (NOLOCK)
-      WHERE user_id0 IS NOT NULL AND LTRIM(RTRIM(user_id0)) <> '' 
-      ORDER BY user_id0 ASC;
     `);
 
     const recordsets = batchRes.recordsets as any[];
-    const bpkdRaw = (recordsets[3] || []).map((r: any) => r.BpkdName?.trim()).filter(Boolean);
-    const userIdRaw = (recordsets[4] || []).map((r: any) => r.user_id0?.trim()).filter(Boolean);
-    
-    // Combine unique employee / staff names and IDs
-    const nhanVienSet = new Set<string>();
-    bpkdRaw.forEach((n: string) => nhanVienSet.add(n));
-    userIdRaw.forEach((u: string) => nhanVienSet.add(u));
-    const combinedNhanVien = Array.from(nhanVienSet).sort((a, b) => a.localeCompare(b, 'vi'));
+    const maQuayList: string[] = (recordsets[2] || []).map((r: any) => r.maQuay?.trim()).filter(Boolean);
+    const quaySet = new Set(maQuayList.map((q) => q.toLowerCase()));
+
+    // Filter real employees: exclude counter codes and technical labels
+    const bpkdRaw: string[] = (recordsets[3] || []).map((r: any) => r.BpkdName?.trim()).filter(Boolean);
+    const nhanVienList = bpkdRaw
+      .filter((name) => {
+        const lower = name.toLowerCase();
+        return lower !== 'excel' && lower !== 'hivi' && !quaySet.has(lower);
+      })
+      .sort((a, b) => a.localeCompare(b, 'vi'));
 
     const result = {
       kieuCtList: (recordsets[0] || []).map((r: any) => r.KieuCt),
       khoNameList: (recordsets[1] || []).map((r: any) => r.KhoName),
-      maQuayList: (recordsets[2] || []).map((r: any) => r.maQuay),
-      bpkdNameList: combinedNhanVien,
+      maQuayList,
+      bpkdNameList: nhanVienList,
     };
 
     filterOptionsCache.set(cacheKey, { data: result, timestamp: now });

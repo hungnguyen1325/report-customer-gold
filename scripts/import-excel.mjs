@@ -223,7 +223,7 @@ export async function importExcelFile(filePath, targetTable = 'Vang_NamPhong') {
       '111', // FK_TkID
       'Tiền mặt', // TkName
       isMua ? 'Khách bán vàng' : 'Khách mua vàng', // Dien_giai
-      quay || 'Vàng Nam Phong', // BpkdName
+      '', // BpkdName (do not set counter as employee)
       null, // dateEdit
       null, // dateEdit2
       null, // dateEdit3
