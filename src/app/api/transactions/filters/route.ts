@@ -62,14 +62,28 @@ export async function GET(req: NextRequest) {
       FROM [${cleanTableName}] WITH (NOLOCK)
       WHERE BpkdName IS NOT NULL AND LTRIM(RTRIM(BpkdName)) <> '' 
       ORDER BY BpkdName ASC;
+
+      SELECT DISTINCT user_id0 
+      FROM [${cleanTableName}] WITH (NOLOCK)
+      WHERE user_id0 IS NOT NULL AND LTRIM(RTRIM(user_id0)) <> '' 
+      ORDER BY user_id0 ASC;
     `);
 
     const recordsets = batchRes.recordsets as any[];
+    const bpkdRaw = (recordsets[3] || []).map((r: any) => r.BpkdName?.trim()).filter(Boolean);
+    const userIdRaw = (recordsets[4] || []).map((r: any) => r.user_id0?.trim()).filter(Boolean);
+    
+    // Combine unique employee / staff names and IDs
+    const nhanVienSet = new Set<string>();
+    bpkdRaw.forEach((n: string) => nhanVienSet.add(n));
+    userIdRaw.forEach((u: string) => nhanVienSet.add(u));
+    const combinedNhanVien = Array.from(nhanVienSet).sort((a, b) => a.localeCompare(b, 'vi'));
+
     const result = {
       kieuCtList: (recordsets[0] || []).map((r: any) => r.KieuCt),
       khoNameList: (recordsets[1] || []).map((r: any) => r.KhoName),
       maQuayList: (recordsets[2] || []).map((r: any) => r.maQuay),
-      bpkdNameList: (recordsets[3] || []).map((r: any) => r.BpkdName),
+      bpkdNameList: combinedNhanVien,
     };
 
     filterOptionsCache.set(cacheKey, { data: result, timestamp: now });

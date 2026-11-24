@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (bpkdName) {
-      whereClauses.push(`BpkdName = @bpkdName`);
+      whereClauses.push(`(BpkdName = @bpkdName OR user_id0 = @bpkdName)`);
       request.input('bpkdName', sql.NVarChar, bpkdName);
     }
 

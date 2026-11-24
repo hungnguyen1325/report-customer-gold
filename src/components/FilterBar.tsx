@@ -16,9 +16,12 @@ interface FilterBarProps {
   setKhoName: (v: string) => void;
   maQuay: string;
   setMaQuay: (v: string) => void;
+  bpkdName?: string;
+  setBpkdName?: (v: string) => void;
   kieuCtOptions: string[];
   khoOptions: string[];
   quayOptions: string[];
+  bpkdOptions?: string[];
   onApplyFilters: () => void;
   onResetFilters: () => void;
   onExportExcel: () => void;
@@ -39,9 +42,12 @@ export default function FilterBar({
   setKhoName,
   maQuay,
   setMaQuay,
+  bpkdName = '',
+  setBpkdName,
   kieuCtOptions,
   khoOptions,
   quayOptions,
+  bpkdOptions = [],
   onApplyFilters,
   onResetFilters,
   onExportExcel,
@@ -141,7 +147,7 @@ export default function FilterBar({
       </div>
 
       {/* Second row: Detailed Dropdown Filters */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 pt-3 border-t border-neutral-800">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 pt-3 border-t border-neutral-800">
         {/* Từ ngày */}
         <div>
           <label className="block text-[11px] font-semibold text-neutral-400 mb-1">
@@ -224,6 +230,25 @@ export default function FilterBar({
             {quayOptions.map((q) => (
               <option key={q} value={q}>
                 {q}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Nhân viên */}
+        <div>
+          <label className="block text-[11px] font-semibold text-neutral-400 mb-1">
+            Nhân viên
+          </label>
+          <select
+            value={bpkdName}
+            onChange={(e) => setBpkdName && setBpkdName(e.target.value)}
+            className="w-full px-3 py-2 bg-neutral-800 text-neutral-200 text-xs rounded-lg border border-neutral-700 focus:outline-none focus:border-amber-400 cursor-pointer"
+          >
+            <option value="">-- Tất cả nhân viên --</option>
+            {bpkdOptions.map((b) => (
+              <option key={b} value={b}>
+                {b}
               </option>
             ))}
           </select>

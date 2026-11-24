@@ -52,11 +52,13 @@ export default function DashboardPage() {
   const [kieuCt, setKieuCt] = useState('');
   const [khoName, setKhoName] = useState('');
   const [maQuay, setMaQuay] = useState('');
+  const [bpkdName, setBpkdName] = useState('');
 
   // Dropdown options
   const [kieuCtOptions, setKieuCtOptions] = useState<string[]>([]);
   const [khoOptions, setKhoOptions] = useState<string[]>([]);
   const [quayOptions, setQuayOptions] = useState<string[]>([]);
+  const [bpkdOptions, setBpkdOptions] = useState<string[]>([]);
 
   // Modals state
   const [viewingRecord, setViewingRecord] = useState<TransactionRecord | null>(null);
@@ -83,6 +85,7 @@ export default function DashboardPage() {
         setKieuCtOptions(data.kieuCtList || []);
         setKhoOptions(data.khoNameList || []);
         setQuayOptions(data.maQuayList || []);
+        setBpkdOptions(data.bpkdNameList || []);
       }
     } catch (err) {
       if (process.env.NODE_ENV !== 'production') {
@@ -113,6 +116,7 @@ export default function DashboardPage() {
       if (kieuCt) params.append('kieuCt', kieuCt);
       if (khoName) params.append('khoName', khoName);
       if (maQuay) params.append('maQuay', maQuay);
+      if (bpkdName) params.append('bpkdName', bpkdName);
 
       const res = await fetch(`/api/transactions?${params.toString()}`);
       if (res.ok) {
@@ -132,7 +136,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [selectedTable, page, pageSize, search, startDate, endDate, kieuCt, khoName, maQuay]);
+  }, [selectedTable, page, pageSize, search, startDate, endDate, kieuCt, khoName, maQuay, bpkdName]);
 
   useEffect(() => {
     fetchTransactions();
@@ -151,6 +155,7 @@ export default function DashboardPage() {
     setKieuCt('');
     setKhoName('');
     setMaQuay('');
+    setBpkdName('');
     setPage(1);
   };
 
@@ -165,6 +170,7 @@ export default function DashboardPage() {
       if (kieuCt) params.append('kieuCt', kieuCt);
       if (khoName) params.append('khoName', khoName);
       if (maQuay) params.append('maQuay', maQuay);
+      if (bpkdName) params.append('bpkdName', bpkdName);
 
       const response = await fetch(`/api/transactions/export?${params.toString()}`);
       if (!response.ok) throw new Error('Xuất file thất bại');
@@ -221,9 +227,12 @@ export default function DashboardPage() {
           setKhoName={setKhoName}
           maQuay={maQuay}
           setMaQuay={setMaQuay}
+          bpkdName={bpkdName}
+          setBpkdName={setBpkdName}
           kieuCtOptions={kieuCtOptions}
           khoOptions={khoOptions}
           quayOptions={quayOptions}
+          bpkdOptions={bpkdOptions}
           onApplyFilters={handleApplyFilters}
           onResetFilters={handleResetFilters}
           onExportExcel={handleExportExcel}
