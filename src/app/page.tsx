@@ -11,6 +11,7 @@ import TransactionDetailModal from '@/components/TransactionDetailModal';
 import AccountsModal from '@/components/AccountsModal';
 import DataTablesModal from '@/components/DataTablesModal';
 import ChangePasswordModal from '@/components/ChangePasswordModal';
+import ImportExcelModal from '@/components/ImportExcelModal';
 import { TransactionRecord, TransactionSummaryStats } from '@/lib/types';
 
 export default function DashboardPage() {
@@ -62,6 +63,7 @@ export default function DashboardPage() {
   const [isAccountsOpen, setIsAccountsOpen] = useState(false);
   const [isTablesOpen, setIsTablesOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
   const [loadingExport, setLoadingExport] = useState(false);
 
   // Redirect if not logged in
@@ -226,6 +228,7 @@ export default function DashboardPage() {
           onResetFilters={handleResetFilters}
           onExportExcel={handleExportExcel}
           loadingExport={loadingExport}
+          onImportExcel={() => setIsImportOpen(true)}
         />
 
         {/* Main transactions table */}
@@ -268,6 +271,16 @@ export default function DashboardPage() {
       <ChangePasswordModal
         isOpen={isChangePasswordOpen}
         onClose={() => setIsChangePasswordOpen(false)}
+      />
+
+      <ImportExcelModal
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        tableName={selectedTable}
+        onSuccess={() => {
+          fetchTransactions();
+          loadFilterOptions();
+        }}
       />
     </div>
   );

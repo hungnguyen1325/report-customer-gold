@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Search, Calendar, Filter, RotateCcw, FileSpreadsheet } from 'lucide-react';
+import { Search, Calendar, Filter, RotateCcw, FileSpreadsheet, Upload } from 'lucide-react';
 
 interface FilterBarProps {
   search: string;
@@ -23,6 +23,7 @@ interface FilterBarProps {
   onResetFilters: () => void;
   onExportExcel: () => void;
   loadingExport?: boolean;
+  onImportExcel?: () => void;
 }
 
 export default function FilterBar({
@@ -45,6 +46,7 @@ export default function FilterBar({
   onResetFilters,
   onExportExcel,
   loadingExport,
+  onImportExcel,
 }: FilterBarProps) {
   // Helper to format local date without UTC shifts
   const formatLocalDate = (d: Date) => {
@@ -115,8 +117,18 @@ export default function FilterBar({
           </button>
         </div>
 
-        {/* Action Button: Export Excel */}
-        <div className="flex items-center">
+        {/* Action Buttons: Import & Export Excel */}
+        <div className="flex items-center gap-2">
+          {onImportExcel && (
+            <button
+              type="button"
+              onClick={onImportExcel}
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-amber-400 border border-amber-500/30 hover:border-amber-500/60 font-semibold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
+            >
+              <Upload className="w-4 h-4 text-amber-400" />
+              <span>Nhập Excel</span>
+            </button>
+          )}
           <button
             onClick={onExportExcel}
             disabled={loadingExport}
