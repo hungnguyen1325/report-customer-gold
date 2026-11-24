@@ -14,6 +14,8 @@ interface TransactionTableProps {
   onPageChange: (newPage: number) => void;
   onPageSizeChange: (newSize: number) => void;
   onViewDetail: (rec: TransactionRecord) => void;
+  hasDateFilter?: boolean;
+  onClearDateFilter?: () => void;
 }
 
 export default function TransactionTable({
@@ -26,6 +28,8 @@ export default function TransactionTable({
   onPageChange,
   onPageSizeChange,
   onViewDetail,
+  hasDateFilter,
+  onClearDateFilter,
 }: TransactionTableProps) {
   const formatMoney = (val: number | undefined) => {
     if (val === undefined || val === null || isNaN(val)) return '0 ₫';
@@ -92,12 +96,23 @@ export default function TransactionTable({
             ) : records.length === 0 ? (
               <tr>
                 <td colSpan={10} className="py-16 text-center text-neutral-400">
-                  <div className="flex flex-col items-center justify-center gap-2">
+                  <div className="flex flex-col items-center justify-center gap-2 max-w-sm mx-auto px-4">
                     <FileText className="w-10 h-10 text-neutral-600" />
                     <p className="text-sm font-medium">Không tìm thấy bản ghi giao dịch nào</p>
                     <p className="text-xs text-neutral-500">
-                      Hãy thử thay đổi điều kiện tìm kiếm hoặc chọn khoảng thời gian khác.
+                      {hasDateFilter
+                        ? 'Có thể giao dịch này nằm ở ngày khác ngoài khoảng thời gian đang lọc.'
+                        : 'Hãy thử thay đổi từ khóa hoặc điều kiện tìm kiếm.'}
                     </p>
+                    {hasDateFilter && onClearDateFilter && (
+                      <button
+                        type="button"
+                        onClick={onClearDateFilter}
+                        className="mt-2 px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-neutral-950 font-bold text-xs border border-amber-500/40 transition-all cursor-pointer shadow-md"
+                      >
+                        Xem trong toàn bộ lịch sử (Bỏ giới hạn ngày)
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>

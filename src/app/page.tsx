@@ -138,6 +138,11 @@ export default function DashboardPage() {
     }
   }, [selectedTable, page, pageSize, search, startDate, endDate, kieuCt, khoName, maQuay, bpkdName]);
 
+  // Automatically reset to page 1 whenever any filter criteria changes
+  useEffect(() => {
+    setPage(1);
+  }, [search, startDate, endDate, kieuCt, khoName, maQuay, bpkdName]);
+
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
@@ -254,6 +259,11 @@ export default function DashboardPage() {
             setPage(1);
           }}
           onViewDetail={(rec) => setViewingRecord(rec)}
+          hasDateFilter={Boolean(startDate || endDate)}
+          onClearDateFilter={() => {
+            setStartDate('');
+            setEndDate('');
+          }}
         />
       </main>
 

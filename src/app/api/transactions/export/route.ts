@@ -38,16 +38,22 @@ export async function GET(req: NextRequest) {
     const request = pool.request();
 
     if (search) {
+      const rawDigits = search.replace(/\D/g, '');
+      const cleanPhone = rawDigits.startsWith('0') ? rawDigits.slice(1) : rawDigits;
+
       whereClauses.push(`(
         So_ct LIKE @search OR
-        DoiTacName LIKE @search OR
-        DoiTacTel LIKE @search OR
-        DoiTacCCCD LIKE @search OR
-        VtName LIKE @search OR
+        stt_rec LIKE @search OR
         code LIKE @search OR
-        stt_rec LIKE @search
+        DoiTacName COLLATE Latin1_general_CI_AI LIKE @search OR
+        DoiTacTel LIKE @search OR
+        (LEN(@cleanPhone) >= 3 AND DoiTacTel LIKE @cleanPhone) OR
+        DoiTacCCCD LIKE @search OR
+        DoiTacAdd COLLATE Latin1_general_CI_AI LIKE @search OR
+        VtName COLLATE Latin1_general_CI_AI LIKE @search
       )`);
       request.input('search', sql.NVarChar, `%${search}%`);
+      request.input('cleanPhone', sql.NVarChar, cleanPhone ? `%${cleanPhone}%` : '___NONE___');
     }
 
     if (startDate) {
