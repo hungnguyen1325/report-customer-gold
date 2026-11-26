@@ -154,8 +154,15 @@ export async function importExcelFile(filePath, targetTable = 'Vang_NamPhong') {
 
     // Customer
     const rawTenKH = r['TenKH'];
-    const doiTacName = cleanCustomerName(rawTenKH);
-    const doiTacTel = String(r['Dienthoai'] || '').trim().slice(0, 25);
+    let doiTacName = cleanCustomerName(rawTenKH);
+    if (/^[1-9]\d{8,9}$/.test(doiTacName)) {
+      doiTacName = '0' + doiTacName;
+    }
+    let rawTel = String(r['Dienthoai'] || '').trim().replace(/\s+/g, '');
+    if (rawTel && !rawTel.startsWith('0') && /^\d+$/.test(rawTel) && rawTel.length <= 11) {
+      rawTel = '0' + rawTel;
+    }
+    const doiTacTel = rawTel.slice(0, 25);
     const doiTacAdd = String(r['Diachi'] || '').trim().slice(0, 300);
     const fk_doitacid = (doiTacTel || doiTacName || '').slice(0, 25);
 
