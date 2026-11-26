@@ -148,7 +148,6 @@ export async function GET(req: NextRequest) {
       'Tổng SL': r.so_luong || 0,
       'Tổng TL (chỉ)': r.Tong_tlg || 0,
       'TL Vàng (chỉ)': r.Tlg_au || 0,
-      'Tiền công (VNĐ)': r.Tien_cong || 0,
       'Tiền đá (VNĐ)': r.Tien_da || 0,
       'Thành tiền (VNĐ)': r.tien || 0,
       'Kho hàng': r.KhoName || '',
@@ -173,15 +172,12 @@ export async function GET(req: NextRequest) {
       { wch: 14 }, // SĐT
       { wch: 15 }, // CCCD
       { wch: 25 }, // Địa chỉ
+      { wch: 12 }, // Số món
       { wch: 24 }, // Tên vàng
       { wch: 10 }, // Mã VT
-      { wch: 8 },  // ĐVT
       { wch: 10 }, // SL
       { wch: 14 }, // Tổng TL
       { wch: 14 }, // TL Vàng
-      { wch: 12 }, // HL
-      { wch: 14 }, // Đơn giá
-      { wch: 14 }, // Tiền công
       { wch: 14 }, // Tiền đá
       { wch: 18 }, // Thành tiền
       { wch: 14 }, // Kho

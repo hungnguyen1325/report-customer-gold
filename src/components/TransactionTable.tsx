@@ -78,7 +78,6 @@ export default function TransactionTable({
               <th className="py-3 px-4">Tên hàng / Vàng</th>
               <th className="py-3 px-4 text-right">Tổng TL (chỉ)</th>
               <th className="py-3 px-4 text-right">TL Vàng (chỉ)</th>
-              <th className="py-3 px-4 text-right">Đơn giá</th>
               <th className="py-3 px-4 text-right">Thành tiền</th>
               <th className="py-3 px-4">Kho / Quầy</th>
               <th className="py-3 px-4 text-center">Thao tác</th>
@@ -88,14 +87,14 @@ export default function TransactionTable({
             {loading ? (
               Array.from({ length: 8 }).map((_, i) => (
                 <tr key={i} className="animate-pulse">
-                  <td colSpan={10} className="py-4 px-4">
+                  <td colSpan={9} className="py-4 px-4">
                     <div className="h-4 bg-neutral-800 rounded w-full"></div>
                   </td>
                 </tr>
               ))
             ) : records.length === 0 ? (
               <tr>
-                <td colSpan={10} className="py-16 text-center text-neutral-400">
+                <td colSpan={9} className="py-16 text-center text-neutral-400">
                   <div className="flex flex-col items-center justify-center gap-2 max-w-sm mx-auto px-4">
                     <FileText className="w-10 h-10 text-neutral-600" />
                     <p className="text-sm font-medium">Không tìm thấy bản ghi giao dịch nào</p>
@@ -181,11 +180,6 @@ export default function TransactionTable({
                       {formatWeight(rec.Tlg_au)}
                     </td>
 
-                    {/* Đơn giá */}
-                    <td className="py-3 px-4 text-right whitespace-nowrap font-mono text-neutral-300 text-xs">
-                      {formatMoney(rec.gia_au)}
-                    </td>
-
                     {/* Thành tiền */}
                     <td className="py-3 px-4 text-right whitespace-nowrap">
                       <span
@@ -195,10 +189,9 @@ export default function TransactionTable({
                       >
                         {formatMoney(rec.tien)}
                       </span>
-                      {(rec.Tien_cong || rec.Tien_da) ? (
+                      {rec.Tien_da ? (
                         <div className="text-[10px] text-neutral-400">
-                          {rec.Tien_cong ? `Công: ${formatMoney(rec.Tien_cong)} ` : ''}
-                          {rec.Tien_da ? `Đá: ${formatMoney(rec.Tien_da)}` : ''}
+                          Đá: {formatMoney(rec.Tien_da)}
                         </div>
                       ) : null}
                     </td>

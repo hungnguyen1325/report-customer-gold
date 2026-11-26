@@ -60,16 +60,6 @@ export default function StatsCards({ summary, loading }: StatsCardsProps) {
       bgColor: 'bg-yellow-950/20',
     },
     {
-      title: 'Tổng tiền công chế tác',
-      value: formatMoney(summary?.totalTienCong),
-      subtitle: 'Chi phí gia công hoàn thiện',
-      icon: Layers,
-      color: 'from-purple-500 to-violet-600',
-      textColor: 'text-purple-400',
-      borderColor: 'border-purple-500/20',
-      bgColor: 'bg-purple-950/20',
-    },
-    {
       title: 'Tổng tiền đá quý đính kèm',
       value: formatMoney(summary?.totalTienDa),
       subtitle: 'Giá trị đá quý & hạt đính',
@@ -82,7 +72,7 @@ export default function StatsCards({ summary, loading }: StatsCardsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
       {stats.map((item, idx) => {
         const Icon = item.icon;
         return (

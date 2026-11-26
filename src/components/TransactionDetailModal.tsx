@@ -166,7 +166,6 @@ export default function TransactionDetailModal({ record, tableName, onClose }: T
                       <th className="py-2.5 px-3 text-right">SL</th>
                       <th className="py-2.5 px-3 text-right">Tổng TL (chỉ)</th>
                       <th className="py-2.5 px-3 text-right">TL Au (chỉ)</th>
-                      <th className="py-2.5 px-3 text-right">Tiền công</th>
                       <th className="py-2.5 px-3 text-right">Thành tiền</th>
                     </tr>
                   </thead>
@@ -179,7 +178,6 @@ export default function TransactionDetailModal({ record, tableName, onClose }: T
                         <td className="py-2.5 px-3 text-right font-mono text-neutral-300">{it.so_luong || 1}</td>
                         <td className="py-2.5 px-3 text-right font-mono text-neutral-200">{formatWeight(it.Tong_tlg)}</td>
                         <td className="py-2.5 px-3 text-right font-mono text-amber-400">{formatWeight(it.Tlg_au)}</td>
-                        <td className="py-2.5 px-3 text-right font-mono text-neutral-300">{formatMoney(it.Tien_cong)}</td>
                         <td className="py-2.5 px-3 text-right font-mono font-bold text-amber-400">{formatMoney(it.tien)}</td>
                       </tr>
                     ))}
@@ -195,7 +193,7 @@ export default function TransactionDetailModal({ record, tableName, onClose }: T
               <DollarSign className="w-4 h-4" />
               <span>TỔNG HỢP THANH TOÁN HÓA ĐƠN</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-neutral-300">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-neutral-300">
               <div>
                 <span className="text-neutral-500 block text-xs">Tổng trọng lượng</span>
                 <span className="font-mono font-bold text-white text-sm">
@@ -208,13 +206,7 @@ export default function TransactionDetailModal({ record, tableName, onClose }: T
                   {formatWeight(record.Tlg_au)} chỉ
                 </span>
               </div>
-              <div>
-                <span className="text-neutral-500 block text-xs">Tổng tiền công</span>
-                <span className="font-mono font-semibold text-neutral-200">
-                  {formatMoney(record.Tien_cong)}
-                </span>
-              </div>
-              <div className="bg-amber-950/50 p-2 rounded-lg border border-amber-500/40">
+              <div className="bg-amber-950/50 p-2.5 rounded-lg border border-amber-500/40">
                 <span className="text-amber-400 block text-xs font-bold">TỔNG THÀNH TIỀN</span>
                 <span className="font-mono font-bold text-base sm:text-lg text-amber-300">
                   {formatMoney(record.tien)}
